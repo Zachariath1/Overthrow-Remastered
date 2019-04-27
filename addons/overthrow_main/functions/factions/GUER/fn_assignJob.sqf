@@ -2,8 +2,6 @@ params ["_id","_jobdef","_params"];
 
 _jobdef params ["_name","_target","_condition","_code","_repeat"];
 
-systemChat format["Assigning job: %1",_name];
-
 _active = spawner getVariable ["OT_activeJobs",[]];
 _job = [_id,_params] call _code;
 _j = [_id,_job,_repeat];
@@ -36,8 +34,15 @@ _j spawn {
 				}) then {
 					_jobparams call _end;
 					_active = spawner getVariable ["OT_activeJobs",[]];
-					_active deleteAt (_active find _this);
-					spawner setVariable ["OT_activeJobs",_active,true];
+					private _idx = -1;
+					{
+					    _x params ["_cid"];
+						if(_cid == _id) exitWith {_idx = _forEachIndex};
+					} forEach _active;
+					if(_idx > -1) then {
+						_active deleteAt _idx;
+						spawner setVariable ["OT_activeJobs",_active,true];
+					};
 
 					_active = server getVariable ["OT_activeJobIds",[]];
 					_active deleteAt (_active find _id);
