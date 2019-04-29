@@ -149,7 +149,7 @@ OT_ammo_50cal = "OT_ammo50cal";
 
 OT_item_wrecks = ["Land_Wreck_HMMWV_F","Land_Wreck_Skodovka_F","Land_Wreck_Truck_F","Land_Wreck_Car2_F","Land_Wreck_Car_F","Land_Wreck_Hunter_F","Land_Wreck_Offroad_F","Land_Wreck_Offroad2_F","Land_Wreck_UAZ_F","Land_Wreck_Truck_dropside_F"]; //rekt
 
-OT_NATOwait = 300; //Half the Average time between NATO orders
+OT_NATOwait = 500; //Half the Average time between NATO orders
 OT_CRIMwait = 500; //Half the Average time between crim changes
 OT_jobWait = 60;
 
@@ -504,7 +504,7 @@ OT_allGoggles = [];
 			{
 				private _base = [_x] call BIS_fnc_baseWeapon;
 				if !(_base in _blacklist) then {
-					if !(_x in _weapons) then {_weapons pushback _x};
+					if !(_x in _weapons) then {_weapons pushback _base};
 				};
 			}foreach(getArray(configFile >> "CfgVehicles" >> _cls >> "weapons"));
 			//Get ammo
@@ -523,6 +523,7 @@ OT_allGoggles = [];
 			};
 		};
 	}foreach(_all);
+	_weapons = (_weapons arrayIntersect _weapons); //remove duplicates
 
 	if(isServer) then {
 		spawner setVariable [format["facweapons%1",_name],_weapons,true];
