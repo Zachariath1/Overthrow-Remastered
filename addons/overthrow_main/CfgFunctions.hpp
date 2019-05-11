@@ -31,6 +31,7 @@ class CfgFunctions
 			class unitSeenAny {};
 			class revealToNATO {};
 			class revealToCRIM {};
+			class revealToResistance {};
 		};
 
 		/* Persistent Save */
@@ -322,6 +323,7 @@ class CfgFunctions
 			class getBuildId {};
 			class weatherSystem {};
 			class getRandomRoadPosition {};
+			class isRadarInRange {};
 		};
 
 		/*
@@ -381,6 +383,7 @@ class CfgFunctions
 			class incomeSystem {};
 			class propagandaSystem {};
 			class stability {};
+			class getControlledPopulation {};
 		};
 
 		/*
@@ -505,6 +508,11 @@ class CfgFunctions
 			class NATOGroundSupport {};
 			class NATOTankSupport {};
 			class NATOSeaSupport {};
+			class NATOScrambleJet {};
+			class NATOAPCInsertion {};
+			class NATOScrambleHelicopter {};
+			class NATOGroundPatrol {};
+			class NATOAirPatrol {};
 
 			class NATOResponseObjective {};
 			class NATOResponseTown {};
@@ -520,6 +528,7 @@ class CfgFunctions
 			class NATOSetExplosives {};
 			class NATOupgradeFOB {};
 			class NATOsendGendarmerie {};
+			class NATOreportThreat {};
 		};
 
 		class NATOAI
@@ -556,6 +565,7 @@ class CfgFunctions
 			class initWorkshop {};
 			class initTrainingCamp {};
 			class initWarehouse {};
+			class initRadar {};
 		};
 
         class Util

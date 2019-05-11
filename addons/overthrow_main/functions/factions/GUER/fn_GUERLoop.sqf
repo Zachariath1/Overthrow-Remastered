@@ -38,6 +38,12 @@ if(_dead > 150) then {
 	};
 }foreach(spawner getVariable ["_noid_",[]]);
 
+{
+	if((_x isKindOf "Air") && {(alive _x)} && ((side _x) isEqualTo west) && (_x call OT_fnc_isRadarInRange) && {(count crew _x > 0)}) then {
+		[_x,2500] call OT_fnc_revealToResistance;
+	};
+}foreach(vehicles);
+
 if ((date select 3) != _lasthr) then {
 	_lasthr = date select 3;
 	private _wages = 0;
@@ -167,6 +173,25 @@ if ((date select 4) != _lastmin) then {
 		format["There are %1 dead bodies, initiating auto-cleanup",_dead] remoteExec ["OT_fnc_notifyMinor",0,false];
 		call OT_fnc_cleanDead;
 	};
+
+	//chance to reveal an FOB
+	_revealed = server getVariable ["revealedFOBs",[]];
+	{
+		_x params ["_pos"];
+		private _id = str _pos;
+		private _town = _pos call OT_fnc_nearestTown;
+		_support = [_town] call OT_fnc_support;
+		if (!(_id in _revealed) && (_support > (random 2000))) then {
+			_revealed pushback _id;
+			_mrk = createMarker [format["natofob%1",_id],_pos];
+			_mrkid setMarkerShape "ICON";
+		    _mrkid setMarkerType "mil_Flag";
+		    _mrkid setMarkerColor "ColorBLUFOR";
+		    _mrkid setMarkerAlpha 1;
+			format["Citizens of %1 have revealed intelligence of a nearby NATO FOB",_town] remoteExec ["OT_fnc_notifyMinor",0,false];
+		};
+	}foreach(server getVariable ["NATOfobs",[]]);
+	server setVariable ["revealedFOBs",_revealed,false];
 
 	_stabcounter = _stabcounter + 1;
 	private _abandoned = server getVariable ["NATOabandoned",[]];
