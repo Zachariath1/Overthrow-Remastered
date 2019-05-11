@@ -10,12 +10,18 @@ if(count _primary > 0) then {
 	private _pWpn = _primary select 0;
 	private _pItems = [_primary select 1,_primary select 2,_primary select 3];
 	private _pAmmo = (_primary select 4) select 0;
+	private _pUnderBarrelAmmo = (_primary select 5) select 0;
 
 	if([_ammobox,_pWpn,1] call CBA_fnc_removeWeaponCargo) then {
 		_unit addWeaponGlobal _pWpn;
 		if(!isNil "_pAmmo") then {
 			if([_ammobox,_pAmmo,1] call CBA_fnc_removeMagazineCargo) then {
 				_unit addMagazineGlobal _pAmmo;
+			};
+		};
+		if(!isNil "_pUnderBarrelAmmo") then {
+			if([_ammobox,_pUnderBarrelAmmo,1] call CBA_fnc_removeMagazineCargo) then {
+				_unit addMagazineGlobal _pUnderBarrelAmmo;
 			};
 		};
 		{
@@ -99,14 +105,25 @@ if(count _vest > 0) then {
 };
 
 if(count _backpack > 0) then {
+	// Select backpack item.
 	private _bpCls = _backpack select 0;
+	// Select array of items within backpack, each of which may itself be an array, etc...
+	// Technically, infinite nested arrays, but practically a backpack containing a vest containing a pistol is the worst case I think.
 	private _bpItems = _backpack select 1;
 
+	// If backpack available in storage, remove it from storage.
 	if([_ammobox,_bpCls,1] call CBA_fnc_removeBackpackCargo) then {
+		// Add backpack to unit.
 		_unit addBackpack _bpCls;
 		{
+			// _bpItems stores one backpack entry.
+			// _cc is the item of that entry (magazine, rifle including any attachments, etc...)
+			// _num is the number of those items
 			params ["_cc","_num"];
-			if(_cc isEqualType []) then {_cc = _cc select 0;};
+			private
+			if(_cc isEqualType []) then {
+				_cc = _cc select 0;
+			};
 			private _count = 0;
 
 			private _func = CBA_fnc_removeWeaponCargo;
