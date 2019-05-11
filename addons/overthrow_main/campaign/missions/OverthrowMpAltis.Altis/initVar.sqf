@@ -10,7 +10,7 @@ OT_startCameraTarget = [13808.2,6387.16,0];
 
 //Used to control updates and persistent save compatability. When these numbers go up, that section will be reinitialized on load if required. (ie leave them alone)
 OT_economyVersion = 2;
-OT_NATOversion = 1;
+OT_NATOversion = 2;
 OT_CRIMversion = 1;
 
 OT_faction_NATO = "BLU_F";
@@ -98,12 +98,19 @@ OT_NATO_Vehicles_JetGarrison = [
 	["B_Plane_CAS_01_F",1]
 ];
 
+OT_NATO_Vehicles_StaticAAGarrison = [
+	"B_static_AA_F",
+	"B_static_AA_F"
+]; //Added to every airfield
+
 //Check for jets dlc
 OT_hasJetsDLC = false;
 if("B_Plane_Fighter_01_F" isKindOf "Air") then {
 	OT_hasJetsDLC = true;
 	OT_NATO_Vehicles_JetGarrison pushback ["B_Plane_Fighter_01_F",1];
 	OT_NATO_Vehicles_JetGarrison pushback ["B_Plane_Fighter_01_Stealth_F",1];
+	OT_NATO_Vehicles_StaticAAGarrison pushback "B_Radar_System_01_F";
+	OT_NATO_Vehicles_StaticAAGarrison pushback "B_SAM_System_03_F";
 };
 
 OT_NATO_StaticGarrison_LevelOne = ["B_HMG_01_high_F"];
@@ -166,7 +173,7 @@ OT_CRIM_Launchers = ["launch_RPG32_F","launch_RPG7_F","launch_RPG7_F","launch_RP
 OT_piers = ["Land_PierConcrete_01_4m_ladders_F","Land_PierWooden_01_platform_F","Land_PierWooden_01_hut_F","Land_PierWooden_02_hut_F"]; //spawns dudes that sell boats n stuff
 OT_offices = ["Land_MultistoryBuilding_01_F","Land_MultistoryBuilding_04_F"];
 OT_portBuildings = ["Land_Warehouse_01_F","Land_Warehouse_02_F","Land_ContainerLine_01_F","Land_ContainerLine_02_F","Land_ContainerLine_03_F"];
-OT_airportTerminals = ["Land_Airport_01_terminal_F","Land_Airport_02_terminal_F","Land_Hangar_F"];
+OT_airportTerminals = ["Land_Airport_01_terminal_F","Land_Airport_02_terminal_F","Land_Hangar_F","Land_TentHangar_V1_F"];
 OT_portBuilding = "Land_WarehouseShelter_01_F";
 OT_policeStation = "Land_Cargo_House_V3_F";
 OT_warehouse = "Land_Warehouse_03_F";

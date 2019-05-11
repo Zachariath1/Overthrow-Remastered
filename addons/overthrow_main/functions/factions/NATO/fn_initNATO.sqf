@@ -121,15 +121,25 @@ if((server getVariable "StartupType") == "NEW" || (server getVariable ["NATOvers
 			if(_name isEqualTo OT_NATO_HQ) then {
 				_garrison = 48;
 				server setVariable [format ["vehgarrison%1",_name],["B_T_APC_Tracked_01_AA_F","B_T_APC_Tracked_01_AA_F","B_GMG_01_high_F","B_GMG_01_high_F","B_GMG_01_high_F","B_HMG_01_high_F","B_HMG_01_high_F","B_HMG_01_high_F"],true];
-				server setVariable [format ["airgarrison%1",_name],OT_NATO_Vehicles_JetGarrison,true];
+				_garr = [];
+				{
+					_x params ["_class","_num"];
+					_count = 0;
+					while {_count < _num} do {
+						_count = _count + 1;
+						_garr pushback _class;
+					};
+				}foreach(OT_NATO_Vehicles_JetGarrison);
+				server setVariable [format ["airgarrison%1",_name],_garr,true];
+				OT_NATO_HQPos = _pos;
+				if((count OT_NATO_HQ_garrisonPos) isEqualTo 0) then {
+					OT_NATO_HQ_garrisonPos = _pos;
+				};
 			}else{
 				server setVariable [format ["airgarrison%1",_name],[],true];
 			};
 			server setVariable [format ["garrison%1",_name],_garrison,true];
 
-			if(_name isEqualTo OT_NATO_HQ) then {
-				OT_NATO_HQPos = _pos;
-			};
 		}else{
 			OT_NATOobjectives pushBack _x;
 		};
@@ -165,16 +175,18 @@ if((server getVariable "StartupType") == "NEW" || (server getVariable ["NATOvers
     private _prilist = [];
     {
         _x params ["_pos","_name","_worth"];
-        _prilist pushback _name;
-        if(_worth > 500) then {
-            _prilist pushback _name;
-        };
-        if(_worth > 800) then {
-            _prilist pushback _name;
-        };
-        if(_worth > 1000) then {
-            _prilist pushback _name;
-        };
+		if(_name != OT_NATO_HQ) then {
+	        _prilist pushback _name;
+	        if(_worth > 500) then {
+	            _prilist pushback _name;
+	        };
+	        if(_worth > 800) then {
+	            _prilist pushback _name;
+	        };
+	        if(_worth > 1000) then {
+	            _prilist pushback _name;
+	        };
+		};
     }foreach(OT_airportData);
 
 	{
@@ -188,6 +200,14 @@ if((server getVariable "StartupType") == "NEW" || (server getVariable ["NATOvers
 			server setVariable [format ["airgarrison%1",_name],_garrison,true];
 		};
 	}foreach(OT_NATO_Vehicles_AirGarrison);
+
+	//Distribute static AA to airfields
+	{
+		_x params ["_pos","_name"];
+		_vehs = server getVariable [format ["vehgarrison%1",_name],[]];
+		_vehs = _vehs + OT_NATO_Vehicles_StaticAAGarrison;
+		server setVariable [format ["vehgarrison%1",_name],_vehs,true];
+	}foreach(OT_airportData);
 
 	diag_log "Overthrow: Setting up NATO checkpoints";
 	{
