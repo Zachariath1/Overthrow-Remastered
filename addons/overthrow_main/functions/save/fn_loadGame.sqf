@@ -286,6 +286,24 @@ sleep 0.2;
 		OT_autoSave_last_time = (_val#1);
 		_set = false;
 	};
+	if(_key == "recruitables") then {
+		{
+			_x params ["_cls","_loadout"];
+			private _done = false;
+			{
+				_x params ["_c","_l"];
+				if(_c == _cls) exitWith {_done = true;_x set [1,_loadout]};
+			}foreach(OT_Recruitables);
+		}foreach(_val);
+		if !(_done) then {OT_Recruitables pushback [_cls,_loadout]};
+		publicVariable "OT_Recruitables";
+		_set = false;
+	};
+	if(_key == "policeLoadout") then {
+		OT_Loadout_Police = _val;
+		publicVariable "OT_Loadout_Police";
+		_set = false;
+	};
 
 	if(_set && !(isNil "_val")) then {
 		if!(toLower (_key select [0,4]) in ["ace_","cba_","bis_"]) then {
@@ -310,6 +328,9 @@ sleep 0.2;
 		spawner setVariable [format["resgarrison%1",_code],_group,true];
 		{
 			_x params ["_cls","_loadout"];
+			if(_cls isEqualType 0) then {
+				_cls = (OT_Recruitables select _cls) select 0;
+			};
 
 			if(_cls != "HMG" && _cls != "GMG") then {
 				private _start = [[[_pos,30]]] call BIS_fnc_randomPos;
@@ -341,6 +362,9 @@ sleep 0.2;
 		spawner setVariable [format["resgarrison%1",_code],_group,true];
 		{
 			_x params ["_cls","_loadout"];
+			if(_cls isEqualType 0) then {
+				_cls = (OT_Recruitables select _cls) select 0;
+			};
 			if(_cls != "HMG" && _cls != "GMG") then {
 				private _start = [[[_pos,30]]] call BIS_fnc_randomPos;
 				private _civ = _group createUnit [_cls, _start, [],0, "NONE"];
